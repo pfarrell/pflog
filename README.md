@@ -1,11 +1,11 @@
-# Flog
+# Pflog
 ## A Foto Blog generator
 
-Flog (will build on the simple concept of using email as an input interface for a system.
+Pflog (will build on the simple concept of using email as an input interface for a system.
 Yes, I know this idea for this application is like "beating a dead horse".  That's part of
 its name.
 
-The basic idea is that Flog will exist in two parts
+The basic idea is that pflog will exist in two parts
 
 An agent that will:
 1. monitor an email address for new messages
