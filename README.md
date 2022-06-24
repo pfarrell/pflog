@@ -15,3 +15,33 @@ An agent that will:
 1. information can be stored in some datastore (say SQLite or even git)
 
 A classic website to display the uploaded info
+
+## Getting Started
+
+### Set up environment
+This project is built on Python3, uses Sqlite for storage, and assumes agent
+email address is hosted on gmail.  
+
+These instructions should get you up and running, but certainly can be 
+modified if you know what you're doing.
+
+Before you begin, you should set up a new gmail email addres
+
+#### Clone project and change to root directory
+```
+git clone git@github.com/pfarrell/pflog.git 
+cd pflog
+export PYTHONPATH=$(pwd)
+```
+#### Set up a virtual environment, activate, and install project requirements
+```
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.py
+```
+#### Initialize Database
+```
+python ./bin/init_db.py
+```
+This script will prompt you for the agent's email address credentials and store them 
+in a sqlite database created in the project's root directory
