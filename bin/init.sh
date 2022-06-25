@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python ./bin/init.py
+python ./bin/init.py ${@:1}

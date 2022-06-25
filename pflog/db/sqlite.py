@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.sql import expression
 
 from common.consts import CONN_STR
+from common.models import Author
 
 
 def get_engine(conn_string: str = None) -> Engine:
@@ -22,3 +23,24 @@ def run_query(query: expression, session: Session = None):
     if not session:
         session = get_session()
     return session.scalars(query)
+
+
+
+def get_or_create(model, session, obj=None, **kwargs):
+    instance = session.query(model).filter_by(**kwargs).first()
+    if instance:
+        return instance
+    else:
+        if obj:
+            instance = obj
+        else:
+            instance = model(**kwargs)
+        session.add(instance)
+        session.commit()
+        return instance
+
+
+def update(obj, session):
+    session.add(obj)
+    session.commit()
+    return obj
