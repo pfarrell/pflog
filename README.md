@@ -41,7 +41,7 @@ pip install -r requirements.py
 ```
 #### Initialize Database
 ```
-python ./bin/init_db.py
+./bin/init.sh
 ```
 This script will prompt you for the agent's email address credentials and store them 
 in a sqlite database created in the project's root directory
