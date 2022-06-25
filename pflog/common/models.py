@@ -2,7 +2,7 @@
 from sqlalchemy import (
     Column,
     Integer,
-    String,
+    String, ForeignKey, Boolean,
 )
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -18,4 +18,7 @@ class Config(Base):
 class Email(Base):
     __tablename__ = 'email'
     id = Column(Integer, primary_key=True)
+    config_id = Column(Integer, ForeignKey("config.id"))
+    externalid = Column(Integer, nullable = False)
+    processed = Column(Boolean, nullable = False, default = False)
 
