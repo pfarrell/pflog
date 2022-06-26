@@ -25,7 +25,11 @@ email address is hosted on gmail.
 These instructions should get you up and running, but certainly can be 
 modified if you know what you're doing.
 
-Before you begin, you should set up a new gmail email addres
+For Ubuntu/Debian, install `libmagickwand-dev`
+
+Before you begin, you should set up a new gmail email address, enable IMAP support, 
+enable 2FA, and generate an application password for pflog. 
+As of 2022, this seems to be the best way to connect to gmail from a 3rd party app.
 
 #### Clone project and change to root directory
 ```
