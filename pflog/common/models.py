@@ -54,6 +54,26 @@ class Image(Base):
     updated_at = Column('updated_at', DateTime, default=datetime.now(), onupdate=datetime.now())
 
 
+class Video(Base):
+    __tablename__ = "video"
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey("post.id"))
+    original_file_name = Column(String, nullable = False)
+    file_path = Column(String, nullable = False)
+    created_at = Column('created_at', DateTime, default=datetime.now())
+    updated_at = Column('updated_at', DateTime, default=datetime.now(), onupdate=datetime.now())
+
+
+class Document(Base):
+    __tablename__ = "document"
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey("post.id"))
+    original_file_name = Column(String, nullable = False)
+    file_path = Column(String, nullable = False)
+    created_at = Column('created_at', DateTime, default=datetime.now())
+    updated_at = Column('updated_at', DateTime, default=datetime.now(), onupdate=datetime.now())
+
+
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True, nullable=True)
@@ -62,5 +82,7 @@ class Post(Base):
     title = Column(String)
     body = Column(String, nullable=True)
     images = relationship("Image")
+    images = relationship("Video")
+    images = relationship("Document")
     created_at = Column('created_at', DateTime, default=datetime.now())
     updated_at = Column('updated_at', DateTime, default=datetime.now(), onupdate=datetime.now())

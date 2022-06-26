@@ -11,7 +11,7 @@ from imaplib import IMAP4_SSL
 from sqlalchemy.orm import Session
 
 from common.consts import OUTPUT_PATH
-from common.models import Email, Post, Author, Image
+from common.models import Email, Post, Author, Image, Video
 from db.sqlite import get_or_create, get_session, update
 from mail.imap import fetch_unreads, mark_read
 
@@ -61,7 +61,7 @@ def handle_email(email_message):
             continue
         if part.get('Content-Disposition') is None:
             continue
-        content_type = part.get_content_type()
+        content_type = str(part.get_content_type())
         file_name = part.get_filename()
         ext = pathlib.Path(file_name).suffix
         if bool(file_name):
@@ -70,16 +70,18 @@ def handle_email(email_message):
                 fp = open(file_path, 'wb')
                 fp.write(part.get_payload(decode=True))
                 fp.close()
-#            if content_type == 'image/jpeg':
-            image = Image()
-            image.original_file_name = file_name
-            image.file_path = file_path
-            image.post_id = post.id
-            get_or_create(Image, session, obj=image, original_file_name=file_name, post_id=post.id)
-
-            # elif content_type == 'video':
-            #     pass
-            # handle_attachment(content_type, file_name, file_path, email.id)
+            if content_type.startswith('image'):
+                image = Image()
+                image.original_file_name = file_name
+                image.file_path = file_path
+                image.post_id = post.id
+                get_or_create(Image, session, obj=image, original_file_name=file_name, post_id=post.id)
+            elif content_type.startswith('video'):
+                video = Video()
+                video.original_file_name = file_name
+                video.file_path = file_path
+                video.post_id = post.id
+                get_or_create(Video, session, obj=video, original_file_name=file_name, post_id=post.id)
     post.body = str(body)
     update(post, session)
     # update post
