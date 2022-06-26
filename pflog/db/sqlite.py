@@ -4,13 +4,12 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.sql import expression
 
 from common.consts import CONN_STR
-from common.models import Author
 
 
 def get_engine(conn_string: str = None) -> Engine:
     if not conn_string:
         conn_string = CONN_STR
-    return create_engine(conn_string)
+    return create_engine(conn_string, echo="debug")
 
 
 def get_session(engine: Engine = None) -> Session:
@@ -23,7 +22,6 @@ def run_query(query: expression, session: Session = None):
     if not session:
         session = get_session()
     return session.scalars(query)
-
 
 
 def get_or_create(model, session, obj=None, **kwargs):

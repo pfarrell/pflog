@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<article class="post">
+    <header>
+        <div>
+            <p class="title">{{ post.title }}</p>
+            <div class="about">by {{ post.author.name }} on {{ post['created_at'].strftime('%Y-%m-%d') }}</div>
+        </div>
+    </header>
+    <p class="body">{{ post.body }}</p>
+</article>
+{% endblock %}

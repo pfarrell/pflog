@@ -6,7 +6,7 @@ from sqlalchemy import (
     String, ForeignKey, Boolean, DateTime,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 Base = declarative_base()
 
@@ -31,6 +31,7 @@ class Email(Base):
     processed = Column(DateTime, nullable = True)
     created_at = Column('created_at', DateTime, default=datetime.now())
     updated_at = Column('updated_at', DateTime, default=datetime.now(), onupdate=datetime.now())
+    post = relationship("Post", backref=backref("email", uselist=False))
 
 
 class Author(Base):
@@ -81,8 +82,9 @@ class Post(Base):
     email_id = Column(Integer, ForeignKey("email.id"))
     title = Column(String)
     body = Column(String, nullable=True)
-    images = relationship("Image")
-    images = relationship("Video")
-    images = relationship("Document")
     created_at = Column('created_at', DateTime, default=datetime.now())
     updated_at = Column('updated_at', DateTime, default=datetime.now(), onupdate=datetime.now())
+    author = relationship("Author")
+    images = relationship("Image")
+    videos = relationship("Video")
+    docs = relationship("Document")
