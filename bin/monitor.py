@@ -4,7 +4,7 @@ from common.models import Config
 
 from db.sqlite import get_session, run_query
 from mail.imap import get_imap_session
-from mail.mail_handler import handle_email, get_email, retrieve_emails
+from mail.mail_handler import handle_email, retrieve_emails
 
 session = get_session()
 query = select(Config).where(Config.name.in_(["monitor_email"]))

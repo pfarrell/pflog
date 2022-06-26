@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+img {
+    border-radius: 5px;
+}
+.imgbox {
+    display: grid;
+    height: 75%;
+}
+.center-fit {
+    max-width: 100%;
+    max-height: 100vh;
+    margin: auto;
+}
+.title {
+    text-align: center;
+}
+.body {
+    width:"60%";
+}

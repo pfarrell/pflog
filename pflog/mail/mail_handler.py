@@ -65,7 +65,8 @@ def handle_email(email_message):
         file_name = part.get_filename()
         ext = pathlib.Path(file_name).suffix
         if bool(file_name):
-            file_path = os.path.join(OUTPUT_PATH, f"{email.external_id}_{part_id}{ext}")
+            local_file_name = f"{email.external_id}_{part_id}{ext}"
+            file_path = os.path.join(OUTPUT_PATH, local_file_name)
             if not os.path.isfile(file_path):
                 fp = open(file_path, 'wb')
                 fp.write(part.get_payload(decode=True))
@@ -73,18 +74,19 @@ def handle_email(email_message):
             if content_type.startswith('image'):
                 image = Image()
                 image.original_file_name = file_name
-                image.file_path = file_path
+                image.local_file_name = local_file_name
+                image.src_id = email.external_id
                 image.post_id = post.id
-                get_or_create(Image, session, obj=image, original_file_name=file_name, post_id=post.id)
+                get_or_create(Image, session, obj=image, original_file_name=file_name, src_id=email.external_id)
             elif content_type.startswith('video'):
                 video = Video()
                 video.original_file_name = file_name
-                video.file_path = file_path
+                video.local_file_name = local_file_name
+                video.src_id = email.external_id
                 video.post_id = post.id
                 get_or_create(Video, session, obj=video, original_file_name=file_name, post_id=post.id)
     post.body = str(body)
     update(post, session)
-    # update post
 
 
 def author_from_string(str: str) -> Author:
@@ -97,9 +99,12 @@ def author_from_string(str: str) -> Author:
         author.name = str
     return author
 
-# parses dates like "Fri, 24 Jun 2022 20:52:02 -0400"
+# parses dates like "Fri, 24 Jun 2022 20:52:02 -0400" or "Fri, 24 Jun 2022 20:52:02 GMT"
 def to_datetime(str: str) -> datetime:
-    return datetime.strptime(str, "%a, %d %b %Y %H:%M:%S %z")
+    try:
+        return datetime.strptime(str, "%a, %d %b %Y %H:%M:%S %z")
+    except:
+        return datetime.strptime(str, "%a, %d %b %Y %H:%M:%S %Z")
 
 
 def get_author(str: str, session: Session) -> Author:
@@ -110,7 +115,7 @@ def get_author(str: str, session: Session) -> Author:
 def get_email(msg: Message, author: Author, session: Session) -> Email:
     email = Email()
     email.author_id = author.id
-    email.external_id = msg['message-id']
+    email.external_id = re.sub("[<>]", "", msg['message-id'])
     email.headers = str(msg.items())
     email.received = to_datetime(_stringify(msg['date']))
     return get_or_create(Email, session, obj=email, author_id=email.author_id, external_id=email.external_id)

@@ -9,7 +9,8 @@ from common.consts import CONN_STR
 def get_engine(conn_string: str = None) -> Engine:
     if not conn_string:
         conn_string = CONN_STR
-    return create_engine(conn_string, echo="debug")
+    #return create_engine(conn_string, echo="debug")
+    return create_engine(conn_string)
 
 
 def get_session(engine: Engine = None) -> Session:
@@ -22,6 +23,10 @@ def run_query(query: expression, session: Session = None):
     if not session:
         session = get_session()
     return session.scalars(query)
+
+
+def exists(model, session, obj, **kwargs):
+    return session.query(model).filter_by(**kwargs).first()
 
 
 def get_or_create(model, session, obj=None, **kwargs):
