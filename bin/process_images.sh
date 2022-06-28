@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for src in ../*.jpg ../*.jpeg;
+for src in ../*.jpg ../*.jpeg ../*.JPG ../*.JPEG;
   do
     cropped=$(echo $src | sed -e 's/\.\.\///');
     if [ ! -f $cropped ]; then
