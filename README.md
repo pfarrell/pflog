@@ -25,7 +25,9 @@ email address is hosted on gmail.
 These instructions should get you up and running, but certainly can be 
 modified if you know what you're doing.
 
-For Ubuntu/Debian, install `libmagickwand-dev`
+For Ubuntu/Debian, use apt to install 
+* `libmagickwand-dev`
+* `python3-opencv`
 
 Before you begin, you should set up a new gmail email address, enable IMAP support, 
 enable 2FA, and generate an application password for pflog. 

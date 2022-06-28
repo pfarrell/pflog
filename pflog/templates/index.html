@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="band">
 {% for post in posts %}
-<article class="post">
-    <header>
-        <div>
-            <a href="/post/{{ post.id }}">
-                <h1>{{ post.title }}</h1>
-            </a>
-        </div>
-    </header>
-</article>
+<div class = "item-{{ loop.counter }}">
+        <a href="/post/{{ post.id }}" class="card">
+            {% if post.images %}
+            <div class="thumb" style="background-image:url(/static/files/sm/{{ post.images[0].local_file_name }});"></div>
+            {% endif %}
+            <article>
+                <h1>{{post.title}}</h1>
+                <span>{{ post.author.name }}</span>
+            </article>
+        </a>
+</div>
 {% endfor %}
+</div>
 {% endblock %}

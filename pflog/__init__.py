@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, app, render_template
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 from common.consts import CONN_STR
 from common.models import Post
@@ -33,8 +33,9 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route('/')
     def index():
-        query = select(Post)
-        posts = run_query(query)
+        session = get_session()
+        query = select(Post).order_by(Post.id.desc())
+        posts = run_query(query, session=session)
         return render_template('index.html', posts=posts)
 
     @app.route('/post/<int:post_id>')
