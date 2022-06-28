@@ -9,11 +9,11 @@ def get_imap_session(username, password) -> imaplib.IMAP4_SSL:
     return imap
 
 
-def fetch_unreads(imap: imaplib.IMAP4_SSL) -> tuple[str, list]:
+def fetch_unreads(imap: imaplib.IMAP4_SSL):
     imap.select('inbox')
     return imap.search(None, 'UnSeen')
 
 
-def mark_read(imap: imaplib.IMAP4_SSL, mail_id: str) -> tuple[str, list]:
+def mark_read(imap: imaplib.IMAP4_SSL, mail_id: str):
     return imap.store(mail_id, '+FLAGS', '\Seen')
 

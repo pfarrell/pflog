@@ -29,6 +29,9 @@ For Ubuntu/Debian, use apt to install
 * `libmagickwand-dev`
 * `python3-opencv`
 
+Smartcrop is using an unreleased version which is not in pip.  To install you should
+`pip install git+https://github.com/epixelic/python-smart-crop`
+
 Before you begin, you should set up a new gmail email address, enable IMAP support, 
 enable 2FA, and generate an application password for pflog. 
 As of 2022, this seems to be the best way to connect to gmail from a 3rd party app.
