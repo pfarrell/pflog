@@ -1,5 +1,6 @@
 import os
 import pathlib
+import quopri
 import re
 import traceback
 import email
@@ -57,7 +58,10 @@ def handle_email(email_message):
         if part.get_content_maintype() == 'multipart':
             continue
         if part.get_content_maintype() == 'text':
-            body.append(part.get_payload())
+            line = part.get_payload()
+            if part['Content-Transfer-Encoding'] == 'quoted-printable':
+                line = quopri.decodestring(part.get_payload()).decode("utf-8")
+            body.append(line)
             continue
         if part.get('Content-Disposition') is None:
             continue
