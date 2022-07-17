@@ -14,4 +14,3 @@ for config in run_query(query, session=session):
     for email_message in retrieve_emails(imap_session):
         handle_email(email_message)
 
-print("complete")
