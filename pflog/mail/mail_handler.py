@@ -8,11 +8,12 @@ from datetime import datetime
 from email.header import make_header, decode_header
 from email.message import Message
 from imaplib import IMAP4_SSL
+from typing import List
 
 from sqlalchemy.orm import Session
 
 from common.consts import OUTPUT_PATH
-from common.models import Email, Post, Author, Image, Video
+from common.models import Email, Post, Author, Image, Video, Tag
 from db.sqlite import get_or_create, get_session, update
 from mail.imap import fetch_unreads, mark_read
 
@@ -89,8 +90,24 @@ def handle_email(email_message):
                 video.src_id = email.external_id
                 video.post_id = post.id
                 get_or_create(Video, session, obj=video, original_file_name=file_name, post_id=post.id)
-    post.body = str(body)
+    post.body, post.tags = extract_body_and_tags(body, session)
     update(post, session)
+
+
+def extract_body_and_tags(body: List[str], session):
+    message = ""
+    tags = []
+    for raw_line in body:
+        line = raw_line.strip().replace("=\r\n", "")
+        if line.lower() == "sent from my phone":
+            continue
+        elif line.lower().startswith("tags:"):
+            for tag_name in line.lower().replace("tags:", "").split(","):
+                tag = get_tag(tag_name.strip(), session)
+                tags.append(tag)
+        else:
+            message = f"{message} {line}"
+    return message, tags
 
 
 def author_from_string(str: str) -> Author:
@@ -131,6 +148,13 @@ def get_post(msg: Message, author: Author, email: Email, session: Session) -> Po
     post.author_id = author.id
     post.email_id = email.id
     return get_or_create(Post, session, obj=post, author_id=post.author_id, email_id=post.email_id)
+
+
+def get_tag(tag_name: str, session: Session) -> Post:
+    tag = Tag()
+    tag_name = tag_name.replace("sent from my phone", "")
+    tag.name = tag_name
+    return get_or_create(Tag, session, obj=tag, name=tag_name)
 
 
 def handle_attachment():
