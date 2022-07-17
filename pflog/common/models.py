@@ -68,7 +68,7 @@ class Document(Media):
 post_to_tags_table = Table(
     "post_tag",
     BaseTable.metadata,
-    Column("poast_id", ForeignKey("post.id"), primary_key=True),
+    Column("post_id", ForeignKey("post.id"), primary_key=True),
     Column("tag_id", ForeignKey("tag.id"), primary_key=True)
 )
 

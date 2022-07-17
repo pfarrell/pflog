@@ -9,8 +9,8 @@ from common.consts import CONN_STR
 def get_engine(conn_string: str = None) -> Engine:
     if not conn_string:
         conn_string = CONN_STR
-    #return create_engine(conn_string, echo="debug")
-    return create_engine(conn_string)
+    return create_engine(conn_string, echo="debug")
+    #return create_engine(conn_string)
 
 
 def get_session(engine: Engine = None) -> Session:

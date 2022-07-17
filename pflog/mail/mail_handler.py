@@ -96,18 +96,28 @@ def handle_email(email_message):
 
 def extract_body_and_tags(body: List[str], session):
     message = ""
-    tags = []
+    tags = {}
     for raw_line in body:
         line = raw_line.strip().replace("=\r\n", "")
         if line.lower() == "sent from my phone":
             continue
         elif line.lower().startswith("tags:"):
             for tag_name in line.lower().replace("tags:", "").split(","):
-                tag = get_tag(tag_name.strip(), session)
-                tags.append(tag)
+                tag = get_tag(tag_name, session)
+                tags[tag] = None
+        elif line.lower().strip().startswith("tags\r\n"):
+            for subline in line.split("\r\n"):
+                if subline.lower().strip() == "tags":
+                    continue
+                subline = re.sub(r"^[A-Za-z]*:", "", subline)
+                if subline == '' or subline.lower() == "sent from my phone":
+                    continue
+                for tag_name in subline.lower().split(","):
+                    tag = get_tag(tag_name, session)
+                    tags[tag] = None
         else:
             message = f"{message} {line}"
-    return message, tags
+    return message, list(tags.keys())
 
 
 def author_from_string(str: str) -> Author:
@@ -153,8 +163,8 @@ def get_post(msg: Message, author: Author, email: Email, session: Session) -> Po
 def get_tag(tag_name: str, session: Session) -> Post:
     tag = Tag()
     tag_name = tag_name.replace("sent from my phone", "")
-    tag.name = tag_name
-    return get_or_create(Tag, session, obj=tag, name=tag_name)
+    tag.name = tag_name.strip()
+    return get_or_create(Tag, session, obj=tag, name=tag.name)
 
 
 def handle_attachment():

@@ -4,7 +4,7 @@ from flask import Flask, app, render_template
 from sqlalchemy import select, text
 
 from common.consts import CONN_STR
-from common.models import Post
+from common.models import Post, Tag, Author
 from db.flask_db import db_session
 from db.sqlite import run_query, get_session
 
@@ -39,11 +39,24 @@ def create_app(test_config=None):
         return render_template('index.html', posts=posts)
 
     @app.route('/post/<int:post_id>')
-    def view(post_id):
+    def view_post(post_id):
         session = get_session()
         query = select(Post).where(Post.id == post_id)
         post = run_query(query, session=session).first()
         return render_template('post.html', post=post)
+
+    @app.route('/tag/<string:tag_name>')
+    def tagged_posts(tag_name):
+        session = get_session()
+        tag = session.query(Tag).where(Tag.name == tag_name).first()
+        return render_template('index.html', posts=tag.posts)
+
+    @app.route('/author/<string:author>')
+    def author_posts(author):
+        session = get_session()
+        author = session.query(Author).where(Author.name == author).first()
+        return render_template('index.html', posts=author.posts)
+
 
     return app
 
