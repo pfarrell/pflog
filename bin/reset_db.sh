@@ -6,6 +6,8 @@ sqlite3 db.sqlite3 "drop table video"
 sqlite3 db.sqlite3 "drop table post"
 sqlite3 db.sqlite3 "drop table email"
 sqlite3 db.sqlite3 "drop table author"
+sqlite3 db.sqlite3 "drop table tag"
+sqlite3 db.sqlite3 "drop table post_tag"
 sqlite3 db.sqlite3 "VACUUM"
 
 ./bin/init.sh --db-only

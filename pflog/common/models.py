@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import (
     Column,
     Integer,
-    String, ForeignKey, Boolean, DateTime,
+    String, ForeignKey, Boolean, DateTime, Table,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
@@ -65,6 +65,14 @@ class Document(Media):
     post_id = Column(Integer, ForeignKey("post.id"))
 
 
+post_to_tags_table = Table(
+    "post_tag",
+    BaseTable.metadata,
+    Column("poast_id", ForeignKey("post.id"), primary_key=True),
+    Column("tag_id", ForeignKey("tag.id"), primary_key=True)
+)
+
+
 class Post(BaseTable):
     __tablename__ = 'post'
     author_id = Column(Integer, ForeignKey("author.id"))
@@ -75,3 +83,10 @@ class Post(BaseTable):
     images = relationship("Image")
     videos = relationship("Video")
     docs = relationship("Document")
+    tags = relationship("Tag", secondary=post_to_tags_table, back_populates="posts")
+
+
+class Tag(BaseTable):
+    __tablename__ = "tag"
+    name = Column(String)
+    posts = relationship("Post", secondary=post_to_tags_table, back_populates="tags")
