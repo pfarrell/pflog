@@ -12,7 +12,6 @@
             {% for message in get_flashed_messages() %}<a>
             <div class="flash">{{ message }}</div>
             {% endfor %}
-            <div><i><a href="/">Home</a></i></div>
             {% block content %}{% endblock %}
         </section>
     </body>
